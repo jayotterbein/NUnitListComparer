@@ -1,10 +1,12 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.Runtime.CompilerServices;
+using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using NUnitListComparer;
 
 namespace NUnitListComparerTests
 {
     [TestFixture]
-    [Ignore("These tests are designed to fail for the purposes of displaying the output from ListComparerConstaint.")]
     public class OutputDisplayTests
     {
         [Test]
@@ -20,7 +22,7 @@ namespace NUnitListComparerTests
             Assert.That(actual, !listComparerConstraint, "Evaulating the constraint.  This assert should not fail.");
             Assert.That(listComparerConstraint.DifferenceIndecies, Is.EquivalentTo(new[] {1}), "Verifying all differences were found correctly.  This assert should not fail.");
 
-            Assert.That(actual, listComparerConstraint, "This assert is expected to fail and is used to for the display of items");
+            OutputFailedResultMessage(listComparerConstraint);
         }
 
         [Test]
@@ -36,7 +38,17 @@ namespace NUnitListComparerTests
             Assert.That(actual, !listComparerConstraint, "Evaulating the constraint.  This assert should not fail.");
             Assert.That(listComparerConstraint.DifferenceIndecies, Is.EquivalentTo(new[] {0, 1}), "Verifying all differences were found correctly.  This assert should not fail.");
 
-            Assert.That(actual, listComparerConstraint, "This assert is expected to fail and is used to for the display of items");
+            OutputFailedResultMessage(listComparerConstraint);
+        }
+
+        private static void OutputFailedResultMessage(Constraint listComparerConstraint, [CallerMemberName]string memberName = "")
+        {
+            using (var messageWriter = new TextMessageWriter())
+            {
+                listComparerConstraint.WriteMessageTo(messageWriter);
+                Console.WriteLine("----- {0}", memberName);
+                Console.WriteLine(messageWriter.ToString());
+            }
         }
     }
 }

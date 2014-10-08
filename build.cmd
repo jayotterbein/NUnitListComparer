@@ -1,0 +1,1 @@
+powershell.exe -NonInteractive -NoProfile -ExecutionPolicy Bypass -Command "& {Import-Module '%~dp0\tools\psake-4.3.2\psake.psm1'; $psake.use_exit_on_error = $true; invoke-psake %~dp0\default.ps1 %*; if ($lastexitcode -ne 0) {write-host "ERROR: $lastexitcode" -fore RED; exit $lastexitcode} }" 
